@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngularJS Examples</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <script src="app.js"></script>
+</head>
+<body ng-app="myApp">
+    <div class="container">
+        <h1>AngularJS Examples</h1>
+        
+        <!-- A. ONE-WAY AND TWO-WAY DATA BINDING -->
+        <section ng-controller="DataBindingController">
+            <h2>A. One-Way and Two-Way Data Binding</h2>
+            
+            <div class="form-group">
+                <h3>Two-Way Data Binding</h3>
+                <label for="twoWayInput">Enter text (two-way binding):</label>
+                <input type="text" id="twoWayInput" ng-model="twoWayValue">
+                <p>You typed: <strong>{{ twoWayValue }}</strong></p>
+            </div>
+            
+            <div class="form-group">
+                <h3>One-Way Data Binding</h3>
+                <p>Current time (one-way binding): <strong>{{ currentTime }}</strong></p>
+                <button ng-click="updateTime()">Update Time</button>
+            </div>
+            
+            <div class="form-group">
+                <h3>One-Way Data Binding with ng-bind</h3>
+                <p>Using ng-bind: <strong ng-bind="oneWayValue"></strong></p>
+                <button ng-click="changeValue()">Change Value</button>
+            </div>
+        </section>
+
+        <!-- B. AUTHENTICATION SYSTEM -->
+        <section ng-controller="AuthController">
+            <h2>B. Basic Authentication System</h2>
+            
+            <form ng-submit="login()" name="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" ng-model="credentials.username" required>
+                    <p ng-show="loginForm.username.$touched && loginForm.username.$invalid" class="error">Username is required</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" ng-model="credentials.password" required>
+                    <p ng-show="loginForm.password.$touched && loginForm.password.$invalid" class="error">Password is required</p>
+                </div>
+                
+                <button type="submit" ng-disabled="loginForm.$invalid">Login</button>
+            </form>
+            
+            <p ng-show="loginSuccess" class="success">Login successful! Welcome, {{ credentials.username }}.</p>
+            <p ng-show="loginError" class="error">Invalid username or password.</p>
+            
+            <div ng-show="isLoggedIn">
+                <h3>Welcome to the Dashboard</h3>
+                <p>You are now logged in as {{ credentials.username }}</p>
+                <button ng-click="logout()">Logout</button>
+            </div>
+        </section>
+
+        <!-- C. CUSTOM FILTER FOR BOOK SEARCH -->
+        <section ng-controller="BookController">
+            <h2>C. Custom Book Filter</h2>
+            
+            <div class="form-group">
+                <label for="searchQuery">Search books:</label>
+                <input type="text" id="searchQuery" ng-model="searchQuery" placeholder="Enter title, author or genre">
+            </div>
+            
+            <div class="form-group">
+                <label>Search by:</label>
+                <select ng-model="searchType">
+                    <option value="all">All Fields</option>
+                    <option value="title">Title</option>
+                    <option value="author">Author</option>
+                    <option value="genre">Genre</option>
+                </select>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Genre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="book in books | bookFilter:searchQuery:searchType">
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.genre }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- D. AUTH SERVICE IMPLEMENTATION -->
+        <section ng-controller="ServiceAuthController">
+            <h2>D. Auth Service Implementation</h2>
+            
+            <div ng-show="!isAuthenticated()">
+                <form ng-submit="login()" name="serviceLoginForm" novalidate>
+                    <div class="form-group">
+                        <label for="serviceUsername">Username:</label>
+                        <input type="text" id="serviceUsername" ng-model="userCredentials.username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="servicePassword">Password:</label>
+                        <input type="password" id="servicePassword" ng-model="userCredentials.password" required>
+                    </div>
+                    
+                    <button type="submit">Login with Service</button>
+                </form>
+                
+                <p ng-show="authError" class="error">{{ authError }}</p>
+            </div>
+            
+            <div ng-show="isAuthenticated()">
+                <h3>Service Authentication Success!</h3>
+                <p>You are logged in as: <strong>{{ currentUser().username }}</strong></p>
+                <p>User role: <strong>{{ currentUser().role }}</strong></p>
+                <button ng-click="logout()">Logout</button>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
